@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Pika & Berk – V23.4 (FULL • Ses Toggle + Random)</title>
+<title>Pika & Berk – V23.7 FINAL</title>
 <style>
 :root{ --card-w:170px; --card-h:220px; }
 *{ box-sizing:border-box; }
@@ -13,7 +13,7 @@ body{
   font-family:"Comic Sans MS",system-ui,sans-serif;
 }
 
-/* Yönerge kutusu (sol üst) */
+/* ==== YÖNERGE ==== */
 #instructionBox{
   position:absolute; top:40px; left:40px;
   background:#e3f2fd; border:3px solid #2196f3; border-radius:14px;
@@ -23,7 +23,7 @@ body{
 #instructionBox .title{font-weight:700; margin-bottom:4px;}
 #instructionBox .line{font-weight:700; font-size:13px; text-transform:uppercase; margin:1px 0;}
 
-/* Üstteki 3 seçenek (yukarı ve yakın) */
+/* ==== KARTLAR ==== */
 .option-card{
   width:var(--card-w); height:var(--card-h);
   background:#fff; border:3px solid rgba(11,132,165,.4); border-radius:16px;
@@ -32,15 +32,15 @@ body{
   padding:6px 8px; user-select:none; z-index:10;
   transition:transform .25s ease, border-color .2s ease, box-shadow .2s ease;
 }
-#optionLeft{   top:6%; left:24%;}
-#optionCenter{ top:6%; left:50%; transform:translateX(-50%);}
-#optionRight{  top:6%; right:24%;}
+#optionLeft{top:6%; left:24%;}
+#optionCenter{top:6%; left:50%; transform:translateX(-50%);}
+#optionRight{top:6%; right:24%;}
 
 .card-tr{ margin-top:2px; font-weight:800; text-transform:uppercase; text-align:center; font-size:14px;}
 .card-img{ width:120px; height:120px; object-fit:contain; margin:6px 0; pointer-events:none;}
 .card-en{ font-size:12px; font-style:italic; text-align:center; opacity:.85; margin-bottom:2px;}
 
-/* Alt, sürüklenen kart (biraz aşağı) */
+/* ==== SÜRÜKLENEN KART ==== */
 #dragCard{
   width:var(--card-w); height:var(--card-h);
   background:#fff; border:3px solid rgba(11,132,165,.6); border-radius:16px;
@@ -53,39 +53,35 @@ body{
 .correct{ border-color:#2ecc71!important; box-shadow:0 0 18px rgba(46,204,113,.9)!important;}
 .wrong{   border-color:#e74c3c!important; box-shadow:0 0 18px rgba(231,76,60,.9)!important;}
 
-/* Sembol bar (en alta yakın) */
+/* ==== SEMBOL BAR ==== */
 #symbolBar{
   position:absolute; bottom:2%; left:50%; transform:translateX(-50%);
   display:flex; gap:6px; background:rgba(255,255,255,.6);
   padding:6px 10px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.15); z-index:120;
 }
-.bar-slot{
-  width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center;
-  font-size:16px; background:#fff; transition:opacity .25s ease, transform .25s ease;
-}
+.bar-slot{ width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center;
+  font-size:16px; background:#fff; transition:opacity .25s ease, transform .25s ease;}
 .bar-slot.empty{ opacity:.25; transform:scale(.9);}
 
-/* Sağ alttaki sembol tahtası */
+/* ==== SEMBOL TAHTASI ==== */
 #symbolBoard{
   position:absolute; bottom:20px; right:20px; width:270px; height:120px;
   background:url('https://cdn.pixabay.com/photo/2014/04/02/10/56/wood-306955_1280.png') center/cover no-repeat;
   border-radius:16px; display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
   gap:6px; padding:10px; box-shadow:0 4px 10px rgba(0,0,0,.25);
 }
-.slot{
-  width:30px; height:30px; border-radius:8px; background:rgba(255,255,255,.25);
-  text-align:center; line-height:30px; font-size:22px; opacity:.25; transition:all .25s ease; cursor:pointer;
-}
+.slot{ width:30px; height:30px; border-radius:8px; background:rgba(255,255,255,.25);
+  text-align:center; line-height:30px; font-size:22px; opacity:.25; transition:all .25s ease; cursor:pointer;}
 .slot.active{ opacity:1; transform:scale(1.06);}
 
-/* Uçan ⭐ */
+/* ==== UÇAN YILDIZ ==== */
 #flyStar{
   position:absolute; width:40px; height:40px; background:gold; border-radius:50%;
   box-shadow:0 0 12px rgba(255,215,0,.9); top:50%; left:50%;
   transform:translate(-50%,-50%) scale(0); opacity:0; pointer-events:none; z-index:999; transition:all .35s ease;
 }
 
-/* Ses butonu */
+/* ==== SES BUTONU ==== */
 #toggleAudio{
   position:fixed; inset:auto 20px 20px auto;
   background:#1976d2; color:#fff; border:0; border-radius:24px; padding:10px 14px;
@@ -95,7 +91,7 @@ body{
 </head>
 <body>
 
-<!-- Yönerge -->
+<!-- ==== YÖNERGE ==== -->
 <div id="instructionBox">
   <div class="title">YÖNERGE :</div>
   <div class="line">- EŞLE</div>
@@ -103,31 +99,15 @@ body{
   <div class="line" id="line3">- ELMAYI EŞLE</div>
 </div>
 
-<!-- Üstteki 3 seçenek -->
-<div class="option-card" id="optionLeft">
-  <div class="card-tr" id="leftTr"></div>
-  <img class="card-img" id="leftImg" alt="">
-  <div class="card-en" id="leftEn"></div>
-</div>
-<div class="option-card" id="optionCenter">
-  <div class="card-tr" id="centerTr"></div>
-  <img class="card-img" id="centerImg" alt="">
-  <div class="card-en" id="centerEn"></div>
-</div>
-<div class="option-card" id="optionRight">
-  <div class="card-tr" id="rightTr"></div>
-  <img class="card-img" id="rightImg" alt="">
-  <div class="card-en" id="rightEn"></div>
-</div>
+<!-- ==== 3 SEÇENEK ==== -->
+<div class="option-card" id="optionLeft"><div class="card-tr" id="leftTr"></div><img class="card-img" id="leftImg"><div class="card-en" id="leftEn"></div></div>
+<div class="option-card" id="optionCenter"><div class="card-tr" id="centerTr"></div><img class="card-img" id="centerImg"><div class="card-en" id="centerEn"></div></div>
+<div class="option-card" id="optionRight"><div class="card-tr" id="rightTr"></div><img class="card-img" id="rightImg"><div class="card-en" id="rightEn"></div></div>
 
-<!-- Alt sürüklenen kart -->
-<div id="dragCard">
-  <div class="card-tr" id="dragTr"></div>
-  <img class="card-img" id="dragImg" alt="">
-  <div class="card-en" id="dragEn"></div>
-</div>
+<!-- ==== SÜRÜKLENEN ==== -->
+<div id="dragCard"><div class="card-tr" id="dragTr"></div><img class="card-img" id="dragImg"><div class="card-en" id="dragEn"></div></div>
 
-<!-- Sembol bar -->
+<!-- ==== SEMBOL BAR ==== -->
 <div id="symbolBar">
   <div class="bar-slot" id="b1">⭐</div><div class="bar-slot" id="b2">⭐</div>
   <div class="bar-slot" id="b3">⭐</div><div class="bar-slot" id="b4">⭐</div>
@@ -135,26 +115,56 @@ body{
   <div class="bar-slot" id="b7">⭐</div><div class="bar-slot" id="b8">⭐</div>
 </div>
 
-<!-- Sembol tahtası -->
+<!-- ==== SEMBOL TAHTASI ==== -->
 <div id="symbolBoard">
   <div class="slot" id="s1"></div><div class="slot" id="s2"></div><div class="slot" id="s3"></div><div class="slot" id="s4"></div>
   <div class="slot" id="s5"></div><div class="slot" id="s6"></div><div class="slot" id="s7"></div><div class="slot" id="s8"></div>
 </div>
 
-<!-- Uçan ⭐ -->
+<!-- ==== UÇAN YILDIZ ==== -->
 <div id="flyStar"></div>
 
-<!-- Ses toggle -->
+<!-- ==== SES BUTONU ==== -->
 <button id="toggleAudio">🔊 Sesi Aç</button>
-
 <script>
 /* =========================
-   V23.4 – FULL MEKANİKLER
-   (Ses toggle + random praise; diğerleri aynı)
+   V23.7 – JS (Bölüm B)
+   - Global ses kontrolü (toggle)
+   - Random övgü sesleri
+   - 50 nesne veri seti (biber.png dahil)
+   - Yönerge, kart doldurma
+   - Sürükle-bırak (3 hedef, 2 denemeli akış)
    ========================= */
 
-/* --- 50 NESNE (id = assets dosya adı) --- */
-/* biber görseli "biber.png" olarak */
+/* ---- Global Ses Toggle ---- */
+let audioEnabled = false;
+const toggleBtn = document.getElementById("toggleAudio");
+toggleBtn.onclick = () => {
+  audioEnabled = !audioEnabled;
+  toggleBtn.textContent = audioEnabled ? "🔇 Sesi Kapat" : "🔊 Sesi Aç";
+};
+
+/* ---- Sesler (preload) ---- */
+const praiseSounds = [
+  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_bf4d03054b.mp3"), // aferin
+  new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_2f19d9df1b.mp3"), // bravo
+  new Audio("https://cdn.pixabay.com/download/audio/2021/09/13/audio_9b4c10d803.mp3"), // süpersin
+  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_dfae32b888.mp3")  // harika gidiyorsun
+];
+const wrongSound        = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_21cda77a64.mp3");
+const allCollectedSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_8a468eab84.mp3");
+[...praiseSounds, wrongSound, allCollectedSound].forEach(a => { try{ a.preload="auto"; a.load(); }catch(e){} });
+
+function playSound(el){ if(audioEnabled){ try{ el.currentTime=0; el.play(); }catch(e){} } }
+function speakTR(text){
+  if(!audioEnabled) return;
+  if(!("speechSynthesis" in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "tr-TR";
+  speechSynthesis.speak(u);
+}
+
+/* ---- 50 NESNE (id = ./assets/<id>.png) ---- */
 const ITEMS = [
   // Meyveler
   {id:"elma",tr:"Elma",en:"Apple"},
@@ -170,7 +180,7 @@ const ITEMS = [
   // Sebzeler
   {id:"domates",tr:"Domates",en:"Tomato"},
   {id:"salatalik",tr:"Salatalık",en:"Cucumber"},
-  {id:"biber",tr:"Biber",en:"Pepper"},
+  {id:"biber",tr:"Biber",en:"Pepper"},           // biber.png
   {id:"sarimsak",tr:"Sarımsak",en:"Garlic"},
   {id:"sogan",tr:"Soğan",en:"Onion"},
   {id:"brokoli",tr:"Brokoli",en:"Broccoli"},
@@ -212,7 +222,7 @@ const ITEMS = [
   {id:"yunus",tr:"Yunus",en:"Dolphin"},
 ];
 
-/* Elemanlar */
+/* ---- Eleman Referansları ---- */
 const instructionLine3 = document.getElementById("line3");
 const optionLeft   = document.getElementById("optionLeft");
 const optionCenter = document.getElementById("optionCenter");
@@ -233,93 +243,72 @@ const dragEn   = document.getElementById("dragEn");
 const barSlots   = [...document.querySelectorAll('#symbolBar .bar-slot')];
 const boardSlots = [...document.querySelectorAll('#symbolBoard .slot')];
 const flyStar    = document.getElementById("flyStar");
-const toggleBtn  = document.getElementById("toggleAudio");
 
-/* Sesler (preload) ve toggle */
-let audioEnabled=false;
-toggleBtn.onclick=()=>{
-  audioEnabled=!audioEnabled;
-  toggleBtn.textContent=audioEnabled?"🔇 Sesi Kapat":"🔊 Sesi Aç";
-};
-
-const praiseSounds = [
-  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_bf4d03054b.mp3"), // aferin
-  new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_2f19d9df1b.mp3"), // bravo
-  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_dfae32b888.mp3"), // harika gidiyorsun
-  new Audio("https://cdn.pixabay.com/download/audio/2021/09/13/audio_9b4c10d803.mp3")  // süpersin
-];
-const wrongSound        = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_21cda77a64.mp3");
-const allCollectedSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_8a468eab84.mp3");
-[...praiseSounds,wrongSound,allCollectedSound].forEach(a=>{try{a.preload="auto";a.load();}catch{}});
-
-/* Durumlar */
-let current=null, wrongA=null, wrongB=null, attempt=1;
-let collectedOnBoard=0, countingMode=false, counted=0;
-
-/* Yardımcılar */
+/* ---- Yardımcılar ---- */
 function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
 function randomItem(){ return ITEMS[Math.floor(Math.random()*ITEMS.length)]; }
 function toAccusative(word){
-  const lower=word.toLowerCase("tr");
+  const lower = word.toLowerCase("tr");
   const vowels="aıoueöü";
-  const lastVowel=(lower.match(/[aıoueöü]/g)||["a"]).slice(-1)[0];
+  const lastVowel = (lower.match(/[aıoueöü]/g)||["a"]).slice(-1)[0];
   let ek="ı"; if(["e","i","ö","ü"].includes(lastVowel)) ek="i";
   if(["o","u"].includes(lastVowel)) ek="u"; if(["a","ı"].includes(lastVowel)) ek="ı";
   if(["ö","ü"].includes(lastVowel)) ek="ü";
-  const last=lower.slice(-1);
-  const isV=vowels.includes(last);
+  const last=lower.slice(-1), isV=vowels.includes(last);
   if(isV) return word+"y"+ek;
   if(last==="k" && (ek==="i"||ek==="ü")) return word.slice(0,-1)+"ğ"+ek;
   return word+ek;
 }
 
-/* Yönerge güncelle */
+/* ---- Yönerge ---- */
 function updateInstruction(){
   instructionLine3.textContent = "- " + toAccusative(current.tr).toUpperCase() + " EŞLE";
 }
 
-/* Kart içerik set et */
+/* ---- Kart İçerik Doldurma ---- */
 function setOption(trEl,imgEl,enEl,item){
-  trEl.textContent=item.tr.toUpperCase();
-  imgEl.src=`./assets/${item.id}.png`;
-  imgEl.dataset.id=item.id;
-  enEl.textContent=item.en.toLowerCase();
+  trEl.textContent = item.tr.toUpperCase();
+  imgEl.src = `./assets/${item.id}.png`;
+  imgEl.dataset.id = item.id;
+  enEl.textContent = item.en.toLowerCase();
 }
 
-/* Ekranı doldur */
+/* ---- Ekranı Render Et ---- */
 function renderQuestion(){
   updateInstruction();
-  const arr=shuffle([current,wrongA,wrongB]);
+  const arr = shuffle([current, wrongA, wrongB]);
   setOption(leftTr,leftImg,leftEn,arr[0]);
   setOption(centerTr,centerImg,centerEn,arr[1]);
   setOption(rightTr,rightImg,rightEn,arr[2]);
 
-  dragTr.textContent=current.tr.toUpperCase();
-  dragImg.src=`./assets/${current.id}.png`;
-  dragEn.textContent=current.en.toLowerCase();
+  dragTr.textContent = current.tr.toUpperCase();
+  dragImg.src = `./assets/${current.id}.png`;
+  dragEn.textContent = current.en.toLowerCase();
 
   resetDragPosition();
 }
 
-/* Yeni set */
+/* ---- Yeni Soru Yükle ---- */
+let current=null, wrongA=null, wrongB=null, attempt=1;
 function loadNew(){
-  current=randomItem();
-  do{ wrongA=randomItem(); }while(wrongA.id===current.id);
-  do{ wrongB=randomItem(); }while(wrongB.id===current.id || wrongB.id===wrongA.id);
-  attempt=1; renderQuestion();
+  current = randomItem();
+  do{ wrongA = randomItem(); }while(wrongA.id===current.id);
+  do{ wrongB = randomItem(); }while(wrongB.id===current.id || wrongB.id===wrongA.id);
+  attempt = 1;
+  renderQuestion();
 }
 
-/* Drag: pozisyon reset */
+/* ---- Drag Pozisyon Reset ---- */
 function resetDragPosition(){
   dragCard.style.transition="all .25s ease";
   dragCard.style.left="50%"; dragCard.style.top="";
   dragCard.style.bottom="7%"; dragCard.style.transform="translateX(-50%)";
 }
 
-/* Drag olayları */
+/* ---- Sürükle-Bırak ---- */
 let isDragging=false, startX=0, startY=0, startLeft=0, startTop=0;
-dragCard.addEventListener("mousedown",dragStart);
-dragCard.addEventListener("touchstart",dragStart,{passive:false});
+dragCard.addEventListener("mousedown", dragStart);
+dragCard.addEventListener("touchstart", dragStart, {passive:false});
 
 function dragStart(e){
   e.preventDefault(); isDragging=true;
@@ -327,10 +316,10 @@ function dragStart(e){
   startX=p.clientX; startY=p.clientY;
   const r=dragCard.getBoundingClientRect(); startLeft=r.left; startTop=r.top;
   dragCard.style.transition="none"; dragCard.style.cursor="grabbing";
-  document.addEventListener("mousemove",dragging);
-  document.addEventListener("touchmove",dragging,{passive:false});
-  document.addEventListener("mouseup",dragEnd);
-  document.addEventListener("touchend",dragEnd);
+  document.addEventListener("mousemove", dragging);
+  document.addEventListener("touchmove", dragging, {passive:false});
+  document.addEventListener("mouseup", dragEnd);
+  document.addEventListener("touchend", dragEnd);
 }
 function dragging(e){
   if(!isDragging) return;
@@ -354,12 +343,11 @@ function dragEnd(){
     {el:optionRight, id:rightImg.dataset.id},
   ];
   let hitId=null;
-  targets.forEach(t=>{
+  for(const t of targets){
     const r=t.el.getBoundingClientRect();
     const hit=!(d.right<r.left||d.left>r.right||d.bottom<r.top||d.top>r.bottom);
-    if(hit) hitId=t.id;
-  });
-
+    if(hit){ hitId=t.id; break; }
+  }
   if(hitId){
     if(hitId===current.id) handleCorrect();
     else handleWrong();
@@ -368,20 +356,21 @@ function dragEnd(){
   }
 }
 
-/* Doğru / Yanlış */
+/* ---- Doğru/Yanlış ---- */
 function handleCorrect(){
   dragCard.classList.add("correct");
+  // Random övgü sesi
   if(audioEnabled){
-    const snd=praiseSounds[Math.floor(Math.random()*praiseSounds.length)];
-    try{ snd.currentTime=0; snd.play(); }catch(e){}
+    const snd = praiseSounds[Math.floor(Math.random()*praiseSounds.length)];
+    playSound(snd);
   }
+  // Sembol kazanımı ve akış (Bölüm C'de gainSymbol tanımlı)
   gainSymbol();
 
-  // 2 denemeli akış: ilk doğruysa üst seçenekleri karıştır, tekrar sor
   if(attempt===1){
     setTimeout(()=>{
       dragCard.classList.remove("correct");
-      shuffleTopOptions();
+      shuffleTopOptions(); // içeriği karıştır
       attempt=2;
       resetDragPosition();
     },450);
@@ -394,11 +383,11 @@ function handleCorrect(){
 }
 function handleWrong(){
   dragCard.classList.add("wrong");
-  if(audioEnabled){ try{ wrongSound.currentTime=0; wrongSound.play(); }catch(e){} }
+  playSound(wrongSound);
   setTimeout(()=>{ dragCard.classList.remove("wrong"); resetDragPosition(); },450);
 }
 
-/* Üst 3 kartı karıştır (içerik shuffle) */
+/* ---- Üst 3 Kartı Karıştır (içerik) ---- */
 function shuffleTopOptions(){
   const pack=[
     {img:leftImg,tr:leftTr,en:leftEn},
@@ -412,40 +401,58 @@ function shuffleTopOptions(){
     pack[i].tr.textContent=states[i].tr; pack[i].en.textContent=states[i].en;
   }
 }
+</script>
+<script>
+/* =========================
+   V23.7 – JS (Bölüm C)
+   - Sembol Bar ve Tahta
+   - Uçan ⭐ Animasyonu
+   - Sesli Sayma ve Sıfırlama
+   ========================= */
 
-/* ====== Sembol Sistemi (bar → tahta → sayma) ====== */
-function firstFilledBarIndex(){return barSlots.findIndex(s=>!s.classList.contains("empty"));}
-function firstEmptyBarIndex(){return barSlots.findIndex(s=>s.classList.contains("empty"));}
+let collectedOnBoard = 0;
+let countingMode = false;
+let counted = 0;
 
-function gainSymbol(){
+/* --- Yardımcılar --- */
+function firstFilledBarIndex() { return barSlots.findIndex(s => !s.classList.contains("empty")); }
+function firstEmptyBarIndex()  { return barSlots.findIndex(s => s.classList.contains("empty")); }
+
+/* --- Sembol Kazanımı --- */
+function gainSymbol() {
   if(countingMode) return;
-  // bar’dan soldaki dolu ilk yıldız eksilsin
-  const i=firstFilledBarIndex();
-  if(i!==-1) barSlots[i].classList.add("empty");
 
-  // uçan ⭐ animasyonu → tahtaya iniş
+  // Bar’dan ilk dolu olanı boşalt
+  const i = firstFilledBarIndex();
+  if(i !== -1) barSlots[i].classList.add("empty");
+
+  // Uçan ⭐ animasyonu
   flyStar.style.top="65%"; flyStar.style.left="50%";
   flyStar.style.opacity=1; flyStar.style.transform="translate(-50%,-50%) scale(1)";
   setTimeout(()=>{
     flyStar.style.top="82%"; flyStar.style.left="88%";
     flyStar.style.opacity=0; flyStar.style.transform="translate(-50%,-50%) scale(.3)";
-  },80);
+  },100);
 
-  // tahtaya ekle
+  // Tahtaya ⭐ ekle
   setTimeout(()=>{
-    if(collectedOnBoard<8){
+    if(collectedOnBoard < 8){
       boardSlots[collectedOnBoard].textContent="⭐";
       boardSlots[collectedOnBoard].classList.add("active");
       collectedOnBoard++;
       if(collectedOnBoard===8){
-        // sayma modu
-        setTimeout(()=>{ countingMode=true; counted=0; speakTR("Hadi sembolleri sayalım"); },400);
+        // 8 sembol tamamlanınca sayma modu
+        setTimeout(()=>{
+          countingMode=true;
+          counted=0;
+          speakTR("Hadi sembolleri sayalım");
+        },600);
       }
     }
-  },350);
+  },400);
 }
 
-/* Tahtada sayma: tıklanan yıldız bar’a geri döner, sayı seslendirilir */
+/* --- Sembol Tahtasında Sayma --- */
 boardSlots.forEach(slot=>{
   slot.addEventListener("click",()=>{
     if(!countingMode) return;
@@ -457,33 +464,28 @@ boardSlots.forEach(slot=>{
     counted++;
 
     const nums=["bir","iki","üç","dört","beş","altı","yedi","sekiz"];
-    speakTR(nums[counted-1]);
+    if(counted<=8) speakTR(nums[counted-1]);
 
     const j=firstEmptyBarIndex();
     if(j!==-1) barSlots[j].classList.remove("empty");
 
     if(counted===8){
       setTimeout(()=>{
-        if(audioEnabled){ try{ allCollectedSound.currentTime=0; allCollectedSound.play(); }catch(e){} }
+        playSound(allCollectedSound);
         speakTR("Aferin! Tüm sembolleri topladın");
-        // sıfırla
+        // Sıfırlama
         countingMode=false; counted=0; collectedOnBoard=0;
-        // tahta boş, bar tam dolu
-      },500);
+        barSlots.forEach(s=>s.classList.remove("empty"));
+        boardSlots.forEach(s=>{s.classList.remove("active"); s.textContent="";});
+        loadNew();
+      },600);
     }
   });
 });
 
-/* Konuşma (tarayıcı TTS) */
-function speakTR(t){
-  if(!("speechSynthesis" in window)) return;
-  const u=new SpeechSynthesisUtterance(t); u.lang="tr-TR";
-  speechSynthesis.speak(u);
-}
-
-/* Başlat */
-window.addEventListener("load", ()=>{
-  barSlots.forEach(s=>s.classList.remove("empty")); // bar full başlasın
+/* --- Başlatıcı --- */
+window.addEventListener("load",()=>{
+  barSlots.forEach(s=>s.classList.remove("empty"));
   loadNew();
 });
 </script>
