@@ -3,13 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Pika & Berk – V23.2 (Görsel düzen uygulanmış)</title>
+<title>Pika & Berk – V23.3 (Full • Ses + biber.png)</title>
+
 <style>
-:root{
-  --card-w:170px;
-  --card-h:220px;
-}
-*{box-sizing:border-box;}
+:root{ --card-w:170px; --card-h:220px; }
+*{ box-sizing:border-box; }
 body{
   margin:0; height:100vh; overflow:hidden;
   background:linear-gradient(to bottom right,#b3e5fc,#e1f5fe);
@@ -26,7 +24,7 @@ body{
 #instructionBox .title{font-weight:700; margin-bottom:4px;}
 #instructionBox .line{font-weight:700; font-size:13px; text-transform:uppercase; margin:1px 0;}
 
-/* Üstteki 3 seçenek kart (biraz yukarı ve birbirine yakın) */
+/* Üstteki 3 seçenek kart (biraz yukarı ve yakın) */
 .option-card{
   width:var(--card-w); height:var(--card-h);
   background:#fff; border:3px solid rgba(11,132,165,.4); border-radius:16px;
@@ -68,7 +66,7 @@ body{
 }
 .bar-slot.empty{ opacity:.25; transform:scale(.9);}
 
-/* Sağ alttaki sembol tahtası (değişmedi) */
+/* Sağ alttaki sembol tahtası */
 #symbolBoard{
   position:absolute; bottom:20px; right:20px; width:270px; height:120px;
   background:url('https://cdn.pixabay.com/photo/2014/04/02/10/56/wood-306955_1280.png') center/cover no-repeat;
@@ -87,6 +85,14 @@ body{
   box-shadow:0 0 12px rgba(255,215,0,.9); top:50%; left:50%;
   transform:translate(-50%,-50%) scale(0); opacity:0; pointer-events:none; z-index:999; transition:all .35s ease;
 }
+
+/* Ses kilidi butonu (iOS/Android autoplay için) */
+#unlockAudio{
+  position:fixed; inset:auto 20px 20px auto;
+  background:#1976d2; color:#fff; border:0; border-radius:24px; padding:10px 14px;
+  box-shadow:0 4px 12px rgba(0,0,0,.2); font-weight:700; cursor:pointer; z-index:1500;
+}
+#unlockAudio.hidden{ display:none; }
 </style>
 </head>
 <body>
@@ -140,15 +146,19 @@ body{
 <!-- Uçan ⭐ -->
 <div id="flyStar"></div>
 
+<!-- Ses kilidi butonu -->
+<button id="unlockAudio">🔊 Sesi Aç</button>
+
 <script>
 /* =========================
-   V23.2 – FULL MEKANİKLER
-   (Sadece görsel konumlar değiştirildi)
+   V23.3 – FULL MEKANİKLER
+   (Görsel düzen + Ses aktif + biber.png düzeltildi)
    ========================= */
 
-/* --- 50 NESNE (id = dosya adı) --- */
+/* --- 50 NESNE (id = assets dosya adı) --- */
+/* biber görseli "biber.png" olarak düzeltildi */
 const ITEMS = [
-  // Meyveler
+  // Meyveler (10)
   {id:"elma",tr:"Elma",en:"Apple"},
   {id:"muz",tr:"Muz",en:"Banana"},
   {id:"armut",tr:"Armut",en:"Pear"},
@@ -159,10 +169,10 @@ const ITEMS = [
   {id:"kavun",tr:"Kavun",en:"Melon"},
   {id:"portakal",tr:"Portakal",en:"Orange"},
   {id:"kivi",tr:"Kivi",en:"Kiwi"},
-  // Sebzeler
+  // Sebzeler (10)
   {id:"domates",tr:"Domates",en:"Tomato"},
   {id:"salatalik",tr:"Salatalık",en:"Cucumber"},
-  {id:"biber",tr:"Biber",en:"Pepper"},
+  {id:"biber",tr:"Biber",en:"Pepper"},         // <— burada biber.png
   {id:"sarimsak",tr:"Sarımsak",en:"Garlic"},
   {id:"sogan",tr:"Soğan",en:"Onion"},
   {id:"brokoli",tr:"Brokoli",en:"Broccoli"},
@@ -170,7 +180,7 @@ const ITEMS = [
   {id:"lahana",tr:"Lahana",en:"Cabbage"},
   {id:"misir",tr:"Mısır",en:"Corn"},
   {id:"patlican",tr:"Patlıcan",en:"Eggplant"},
-  // Taşıtlar
+  // Taşıtlar (10)
   {id:"kamyon",tr:"Kamyon",en:"Truck"},
   {id:"araba",tr:"Araba",en:"Car"},
   {id:"motosiklet",tr:"Motosiklet",en:"Motorcycle"},
@@ -181,7 +191,7 @@ const ITEMS = [
   {id:"tren",tr:"Tren",en:"Train"},
   {id:"otobus",tr:"Otobüs",en:"Bus"},
   {id:"itfaiye_arabasi",tr:"İtfaiye Arabası",en:"Fire Truck"},
-  // Hayvanlar
+  // Hayvanlar (20)
   {id:"aslan",tr:"Aslan",en:"Lion"},
   {id:"kaplan",tr:"Kaplan",en:"Tiger"},
   {id:"kedi",tr:"Kedi",en:"Cat"},
@@ -206,56 +216,66 @@ const ITEMS = [
 
 /* Elemanlar */
 const instructionLine3 = document.getElementById("line3");
-
 const optionLeft   = document.getElementById("optionLeft");
 const optionCenter = document.getElementById("optionCenter");
 const optionRight  = document.getElementById("optionRight");
-
 const leftImg   = document.getElementById("leftImg");
 const centerImg = document.getElementById("centerImg");
 const rightImg  = document.getElementById("rightImg");
-
 const leftTr   = document.getElementById("leftTr");
 const centerTr = document.getElementById("centerTr");
 const rightTr  = document.getElementById("rightTr");
-
 const leftEn   = document.getElementById("leftEn");
 const centerEn = document.getElementById("centerEn");
 const rightEn  = document.getElementById("rightEn");
-
 const dragCard = document.getElementById("dragCard");
 const dragImg  = document.getElementById("dragImg");
 const dragTr   = document.getElementById("dragTr");
 const dragEn   = document.getElementById("dragEn");
-
-/* Sembol bar & Tahta */
-const barSlots = [...document.querySelectorAll('#symbolBar .bar-slot')];
+const barSlots   = [...document.querySelectorAll('#symbolBar .bar-slot')];
 const boardSlots = [...document.querySelectorAll('#symbolBoard .slot')];
-const flyStar = document.getElementById("flyStar");
+const flyStar    = document.getElementById("flyStar");
+const unlockBtn  = document.getElementById("unlockAudio");
 
-/* Sesler */
+/* Sesler (preload + unlock) */
 const praiseSounds = [
-  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_bf4d03054b.mp3"),
-  new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_2f19d9df1b.mp3"),
-  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_dfae32b888.mp3"),
-  new Audio("https://cdn.pixabay.com/download/audio/2021/09/13/audio_9b4c10d803.mp3")
+  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_bf4d03054b.mp3"), // aferin
+  new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_2f19d9df1b.mp3"), // bravo
+  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_dfae32b888.mp3"), // harika gidiyorsun
+  new Audio("https://cdn.pixabay.com/download/audio/2021/09/13/audio_9b4c10d803.mp3")  // süpersin
 ];
-const wrongSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_21cda77a64.mp3");
+const wrongSound        = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_21cda77a64.mp3");
+const allCollectedSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_8a468eab84.mp3");
+[...praiseSounds, wrongSound, allCollectedSound].forEach(a=>{ try{ a.preload="auto"; a.load(); }catch(e){} });
+
+let audioUnlocked = false;
+unlockBtn.addEventListener("click",()=>{
+  // kullanıcı etkileşimi ile ses izni
+  try{
+    praiseSounds[0].muted = true; praiseSounds[0].play().then(()=>{praiseSounds[0].pause(); praiseSounds[0].muted=false;});
+    wrongSound.muted = true; wrongSound.play().then(()=>{wrongSound.pause(); wrongSound.muted=false;});
+    allCollectedSound.muted = true; allCollectedSound.play().then(()=>{allCollectedSound.pause(); allCollectedSound.muted=false;});
+  }catch(e){}
+  audioUnlocked = true;
+  unlockBtn.classList.add("hidden");
+});
 
 /* Durumlar */
 let current=null, wrongA=null, wrongB=null, attempt=1;
 let collectedOnBoard=0, countingMode=false, counted=0;
 
 /* Yardımcılar */
-function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
-function randomItem(){return ITEMS[Math.floor(Math.random()*ITEMS.length)];}
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+function randomItem(){ return ITEMS[Math.floor(Math.random()*ITEMS.length)]; }
 function toAccusative(word){
   const lower=word.toLowerCase("tr");
+  const vowels="aıoueöü";
   const lastVowel=(lower.match(/[aıoueöü]/g)||["a"]).slice(-1)[0];
   let ek="ı"; if(["e","i","ö","ü"].includes(lastVowel)) ek="i";
   if(["o","u"].includes(lastVowel)) ek="u"; if(["a","ı"].includes(lastVowel)) ek="ı";
   if(["ö","ü"].includes(lastVowel)) ek="ü";
-  const last=lower.slice(-1); const vowels="aıoueiöü"; const isV=vowels.includes(last);
+  const last=lower.slice(-1);
+  const isV=vowels.includes(last);
   if(isV) return word+"y"+ek;
   if(last==="k" && (ek==="i"||ek==="ü")) return word.slice(0,-1)+"ğ"+ek;
   return word+ek;
@@ -292,8 +312,8 @@ function renderQuestion(){
 /* Yeni set */
 function loadNew(){
   current=randomItem();
-  do{wrongA=randomItem();}while(wrongA.id===current.id);
-  do{wrongB=randomItem();}while(wrongB.id===current.id||wrongB.id===wrongA.id);
+  do{ wrongA=randomItem(); }while(wrongA.id===current.id);
+  do{ wrongB=randomItem(); }while(wrongB.id===current.id || wrongB.id===wrongA.id);
   attempt=1; renderQuestion();
 }
 
@@ -359,10 +379,10 @@ function dragEnd(){
 /* Doğru / Yanlış */
 function handleCorrect(){
   dragCard.classList.add("correct");
-  // Aferin/Bravo/Süpersin/Harika random
-  const snd=praiseSounds[Math.floor(Math.random()*praiseSounds.length)];
-  try{ snd.currentTime=0; snd.play(); }catch(e){}
-
+  if(audioUnlocked){
+    const snd=praiseSounds[Math.floor(Math.random()*praiseSounds.length)];
+    try{ snd.currentTime=0; snd.play(); }catch(e){}
+  }
   gainSymbol();
 
   // 2 denemeli akış: ilk doğruysa üstteki seçenekleri karıştırıp aynı nesneyi tekrar sor
@@ -382,7 +402,7 @@ function handleCorrect(){
 }
 function handleWrong(){
   dragCard.classList.add("wrong");
-  try{ wrongSound.currentTime=0; wrongSound.play(); }catch(e){}
+  if(audioUnlocked){ try{ wrongSound.currentTime=0; wrongSound.play(); }catch(e){} }
   setTimeout(()=>{ dragCard.classList.remove("wrong"); resetDragPosition(); },450);
 }
 
@@ -452,10 +472,11 @@ boardSlots.forEach(slot=>{
 
     if(counted===8){
       setTimeout(()=>{
+        if(audioUnlocked){ try{ allCollectedSound.currentTime=0; allCollectedSound.play(); }catch(e){} }
         speakTR("Aferin! Tüm sembolleri topladın");
         // sıfırla
         countingMode=false; counted=0; collectedOnBoard=0;
-        // tahta zaten boş, bar full doldu
+        // tahta boşaldı; bar tamamen doldu
       },500);
     }
   });
@@ -464,13 +485,13 @@ boardSlots.forEach(slot=>{
 /* Konuşma (tarayıcı TTS) */
 function speakTR(t){
   if(!("speechSynthesis" in window)) return;
-  const u=new SpeechSynthesisUtterance(t); u.lang="tr-TR"; speechSynthesis.speak(u);
+  const u=new SpeechSynthesisUtterance(t); u.lang="tr-TR";
+  speechSynthesis.speak(u);
 }
 
 /* Başlat */
 window.addEventListener("load", ()=>{
-  // bar’ı full dolu başlat
-  barSlots.forEach(s=>s.classList.remove("empty"));
+  barSlots.forEach(s=>s.classList.remove("empty")); // bar’ı full dolu başlat
   loadNew();
 });
 </script>
