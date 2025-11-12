@@ -3,89 +3,192 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Pika & Berk – V23.2 Ergonomik (Tam Kod)</title>
+<title>Pika & Berk – V24 Full Edition</title>
+
 <style>
-:root{ --card-w:170px; --card-h:220px; }
-*{ box-sizing:border-box; }
+:root{
+  --card-w:170px;
+  --card-h:220px;
+}
+*{box-sizing:border-box;}
 body{
-  margin:0; height:100vh; overflow:hidden;
+  margin:0;
+  height:100vh;
+  overflow:hidden;
   background:linear-gradient(to bottom right,#b3e5fc,#e1f5fe);
   font-family:"Comic Sans MS",system-ui,sans-serif;
 }
-/* Yönerge */
+
+/* Yönerge kutusu */
 #instructionBox{
-  position:absolute; top:40px; left:40px;
-  background:#fff9e6; border:3px solid #f6c453; border-radius:14px;
-  padding:10px 14px; box-shadow:0 3px 8px rgba(0,0,0,.12);
-  z-index:20; min-width:220px;
+  position:absolute;
+  top:40px;
+  left:40px;
+  background:#fff9e6;
+  border:3px solid #f6c453;
+  border-radius:14px;
+  padding:10px 14px;
+  box-shadow:0 3px 8px rgba(0,0,0,.12);
+  z-index:20;
+  min-width:220px;
 }
-#instructionBox .title{ font-weight:700; margin-bottom:4px; }
-#instructionBox .line{ font-weight:700; font-size:13px; text-transform:uppercase; margin:1px 0; }
+#instructionBox .title{
+  font-weight:700;
+  margin-bottom:4px;
+}
+#instructionBox .line{
+  font-weight:700;
+  font-size:13px;
+  text-transform:uppercase;
+  margin:1px 0;
+}
 
-/* Üstteki 3 seçenek (yakınlaştırılıp yukarı alındı) */
+/* Üstteki 3 seçenek (kartlar) */
 .option-card{
-  width:var(--card-w); height:var(--card-h);
-  background:#fff; border:3px solid rgba(11,132,165,.4); border-radius:16px;
+  width:var(--card-w);
+  height:var(--card-h);
+  background:#fff;
+  border:3px solid rgba(11,132,165,.4);
+  border-radius:16px;
   box-shadow:0 4px 10px rgba(0,0,0,.15);
-  position:absolute; display:flex; flex-direction:column; align-items:center;
-  padding:6px 8px; user-select:none; z-index:10;
-  transition:transform .25s ease, border-color .2s ease, box-shadow .2s ease;
+  position:absolute;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:6px 8px;
+  user-select:none;
+  z-index:10;
+  transition:transform .25s ease,border-color .2s ease,box-shadow .2s ease;
 }
-#optionLeft{   top:8%; left:23%; }
-#optionCenter{ top:8%; left:50%; transform:translateX(-50%); }
-#optionRight{  top:8%; right:23%; }
+#optionLeft{top:8%;left:23%;}
+#optionCenter{top:8%;left:50%;transform:translateX(-50%);}
+#optionRight{top:8%;right:23%;}
 
-.card-tr{ margin-top:2px; font-weight:800; text-transform:uppercase; text-align:center; font-size:14px; }
-.card-img{ width:120px; height:120px; object-fit:contain; margin:6px 0; pointer-events:none; }
-.card-en{ font-size:12px; font-style:italic; text-align:center; opacity:.85; margin-bottom:2px; }
+.card-tr{
+  margin-top:2px;
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:14px;
+}
+.card-img{
+  width:120px;
+  height:120px;
+  object-fit:contain;
+  margin:6px 0;
+  pointer-events:none;
+}
+.card-en{
+  font-size:12px;
+  font-style:italic;
+  text-align:center;
+  opacity:.85;
+  margin-bottom:2px;
+}
 
-/* Alt sürüklenen kart (biraz aşağı çekildi) */
+/* Alt sürüklenen kart */
 #dragCard{
-  width:var(--card-w); height:var(--card-h);
-  background:#fff; border:3px solid rgba(11,132,165,.6); border-radius:16px;
+  width:var(--card-w);
+  height:var(--card-h);
+  background:#fff;
+  border:3px solid rgba(11,132,165,.6);
+  border-radius:16px;
   box-shadow:0 6px 10px rgba(0,0,0,.35);
-  position:absolute; bottom:7%; left:50%; transform:translateX(-50%);
-  display:flex; flex-direction:column; align-items:center; padding:6px 8px;
-  cursor:grab; user-select:none; touch-action:none; z-index:200;
-  transition:box-shadow .15s ease, border-color .15s ease;
+  position:absolute;
+  bottom:7%;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:6px 8px;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+  z-index:200;
+  transition:box-shadow .15s ease,border-color .15s ease;
 }
-.correct{ border-color:#2ecc71!important; box-shadow:0 0 18px rgba(46,204,113,.9)!important; }
-.wrong{ border-color:#e74c3c!important; box-shadow:0 0 18px rgba(231,76,60,.9)!important; }
+.correct{border-color:#2ecc71!important;box-shadow:0 0 18px rgba(46,204,113,.9)!important;}
+.wrong{border-color:#e74c3c!important;box-shadow:0 0 18px rgba(231,76,60,.9)!important;}
 
-/* Sembol bar (daha aşağıya alındı) */
+/* Sembol barı */
 #symbolBar{
-  position:absolute; bottom:2%; left:50%; transform:translateX(-50%);
-  display:flex; gap:6px; background:rgba(255,255,255,.6);
-  padding:6px 10px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.15); z-index:120;
+  position:absolute;
+  bottom:2%;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:6px;
+  background:rgba(255,255,255,.6);
+  padding:6px 10px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  z-index:120;
 }
 .bar-slot{
-  width:22px; height:22px; border-radius:6px;
-  display:flex; align-items:center; justify-content:center; font-size:16px;
-  background:#fff; transition:opacity .25s ease, transform .25s ease;
+  width:22px;
+  height:22px;
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  background:#fff;
+  transition:opacity .25s ease,transform .25s ease;
 }
-.bar-slot.empty{ opacity:.25; transform:scale(.9); }
+.bar-slot.empty{opacity:.25;transform:scale(.9);}
 
 /* Sembol tahtası */
 #symbolBoard{
-  position:absolute; bottom:20px; right:20px; width:270px; height:120px;
+  position:absolute;
+  bottom:20px;
+  right:20px;
+  width:270px;
+  height:120px;
   background:url('https://cdn.pixabay.com/photo/2014/04/02/10/56/wood-306955_1280.png') center/cover no-repeat;
-  border-radius:16px; display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
-  gap:6px; padding:10px; box-shadow:0 4px 10px rgba(0,0,0,.25);
+  border-radius:16px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+  padding:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,.25);
 }
-.slot{ width:30px; height:30px; border-radius:8px; background:rgba(255,255,255,.25); text-align:center; line-height:30px; font-size:22px; opacity:.25; transition:all .25s ease; cursor:pointer; }
-.slot.active{ opacity:1; transform:scale(1.06); }
-/* Uçan yıldız */
+.slot{
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  background:rgba(255,255,255,.25);
+  text-align:center;
+  line-height:30px;
+  font-size:22px;
+  opacity:.25;
+  transition:all .25s ease;
+  cursor:pointer;
+}
+.slot.active{opacity:1;transform:scale(1.06);}
+
+/* Uçan sembol */
 #flyStar{
-  position:absolute; width:40px; height:40px; background:gold; border-radius:50%;
+  position:absolute;
+  width:40px;
+  height:40px;
+  background:gold;
+  border-radius:50%;
   box-shadow:0 0 12px rgba(255,215,0,.9);
-  top:50%; left:50%; transform:translate(-50%,-50%) scale(0);
-  opacity:0; pointer-events:none; z-index:999; transition:all .35s ease;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  opacity:0;
+  pointer-events:none;
+  z-index:999;
+  transition:all .35s ease;
 }
 </style>
 </head>
 <body>
 
-<!-- === TÜM HTML GÖVDE === -->
 <div id="instructionBox">
   <div class="title">YÖNERGE :</div>
   <div class="line">- EŞLE</div>
@@ -93,11 +196,29 @@ body{
   <div class="line" id="line3">- ELMAYI EŞLE</div>
 </div>
 
-<div class="option-card" id="optionLeft"><div class="card-tr" id="leftTr"></div><img class="card-img" id="leftImg"><div class="card-en" id="leftEn"></div></div>
-<div class="option-card" id="optionCenter"><div class="card-tr" id="centerTr"></div><img class="card-img" id="centerImg"><div class="card-en" id="centerEn"></div></div>
-<div class="option-card" id="optionRight"><div class="card-tr" id="rightTr"></div><img class="card-img" id="rightImg"><div class="card-en" id="rightEn"></div></div>
+<div class="option-card" id="optionLeft">
+  <div class="card-tr" id="leftTr"></div>
+  <img class="card-img" id="leftImg">
+  <div class="card-en" id="leftEn"></div>
+</div>
 
-<div id="dragCard"><div class="card-tr" id="dragTr"></div><img class="card-img" id="dragImg"><div class="card-en" id="dragEn"></div></div>
+<div class="option-card" id="optionCenter">
+  <div class="card-tr" id="centerTr"></div>
+  <img class="card-img" id="centerImg">
+  <div class="card-en" id="centerEn"></div>
+</div>
+
+<div class="option-card" id="optionRight">
+  <div class="card-tr" id="rightTr"></div>
+  <img class="card-img" id="rightImg">
+  <div class="card-en" id="rightEn"></div>
+</div>
+
+<div id="dragCard">
+  <div class="card-tr" id="dragTr"></div>
+  <img class="card-img" id="dragImg">
+  <div class="card-en" id="dragEn"></div>
+</div>
 
 <div id="symbolBar">
   <div class="bar-slot" id="b1">⭐</div><div class="bar-slot" id="b2">⭐</div>
@@ -107,19 +228,182 @@ body{
 </div>
 
 <div id="symbolBoard">
-  <div class="slot" id="s1"></div><div class="slot" id="s2"></div><div class="slot" id="s3"></div><div class="slot" id="s4"></div>
-  <div class="slot" id="s5"></div><div class="slot" id="s6"></div><div class="slot" id="s7"></div><div class="slot" id="s8"></div>
+  <div class="slot" id="s1"></div><div class="slot" id="s2"></div>
+  <div class="slot" id="s3"></div><div class="slot" id="s4"></div>
+  <div class="slot" id="s5"></div><div class="slot" id="s6"></div>
+  <div class="slot" id="s7"></div><div class="slot" id="s8"></div>
 </div>
 
 <div id="flyStar"></div>
-
-<audio id="correctSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_bf4d03054b.mp3"></audio>
-<audio id="wrongSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_21cda77a64.mp3"></audio>
-
-<!-- === TÜM V23.2’NİN JS BLOĞU AYNI ŞEKİLDE BURADA DURACAK === -->
 <script>
-// (Buraya V23.2’nin tüm orijinal JS kodunu değişmeden yapıştır)
-// Sadece CSS değiştiği için JS’ye müdahale edilmedi.
+// === Pikam & Berk Eşleme Oyunu V24 ===
+
+// --- Ses dosyaları ---
+const praiseSounds = [
+  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_bf4d03054b.mp3"), // aferin
+  new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_2f19d9df1b.mp3"), // bravo
+  new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_dfae32b888.mp3"), // harika
+  new Audio("https://cdn.pixabay.com/download/audio/2021/09/13/audio_9b4c10d803.mp3")  // süpersin
+];
+const allCollectedSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_8a468eab84.mp3");
+const wrongSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_21cda77a64.mp3");
+
+// --- Nesne veri tabanı ---
+const items = [
+  {tr:"Elma",en:"Apple"},{tr:"Muz",en:"Banana"},{tr:"Armut",en:"Pear"},
+  {tr:"Üzüm",en:"Grapes"},{tr:"Ananas",en:"Pineapple"},{tr:"Çilek",en:"Strawberry"},
+  {tr:"Karpuz",en:"Watermelon"},{tr:"Kavun",en:"Melon"},{tr:"Portakal",en:"Orange"},
+  {tr:"Kivi",en:"Kiwi"},{tr:"Domates",en:"Tomato"},{tr:"Salatalık",en:"Cucumber"},
+  {tr:"Biber",en:"Pepper"},{tr:"Sarımsak",en:"Garlic"},{tr:"Soğan",en:"Onion"},
+  {tr:"Brokoli",en:"Broccoli"},{tr:"Havuç",en:"Carrot"},{tr:"Lahana",en:"Cabbage"},
+  {tr:"Mısır",en:"Corn"},{tr:"Patlıcan",en:"Eggplant"},{tr:"Kamyon",en:"Truck"},
+  {tr:"Araba",en:"Car"},{tr:"Motosiklet",en:"Motorcycle"},{tr:"Bisiklet",en:"Bicycle"},
+  {tr:"Gemi",en:"Ship"},{tr:"Helikopter",en:"Helicopter"},{tr:"Uçak",en:"Plane"},
+  {tr:"Tren",en:"Train"},{tr:"Otobüs",en:"Bus"},{tr:"İtfaiye Arabası",en:"Fire Truck"},
+  {tr:"Aslan",en:"Lion"},{tr:"Kedi",en:"Cat"},{tr:"Köpek",en:"Dog"},
+  {tr:"Tavşan",en:"Rabbit"},{tr:"Balık",en:"Fish"},{tr:"Kuş",en:"Bird"},
+  {tr:"At",en:"Horse"},{tr:"İnek",en:"Cow"},{tr:"Maymun",en:"Monkey"},
+  {tr:"Fil",en:"Elephant"},{tr:"Koyun",en:"Sheep"},{tr:"Tavuk",en:"Chicken"},
+  {tr:"Kaplumbağa",en:"Turtle"},{tr:"Panda",en:"Panda"},{tr:"Tilki",en:"Fox"},
+  {tr:"Kurt",en:"Wolf"},{tr:"Ayı",en:"Bear"},{tr:"Kirpi",en:"Hedgehog"},
+  {tr:"Zürafa",en:"Giraffe"},{tr:"Kartal",en:"Eagle"}
+];
+
+let currentItem, options = [], score = 0;
+
+// --- Rastgele nesne seçimi ---
+function getRandomItem(){
+  return items[Math.floor(Math.random()*items.length)];
+}
+
+// --- Yeni tur başlat ---
+function newRound(){
+  currentItem = getRandomItem();
+  options = [currentItem];
+  while(options.length<3){
+    let r = getRandomItem();
+    if(!options.includes(r)) options.push(r);
+  }
+  options.sort(()=>Math.random()-0.5);
+  // ekranı güncelle
+  document.getElementById("leftTr").textContent = options[0].tr;
+  document.getElementById("centerTr").textContent = options[1].tr;
+  document.getElementById("rightTr").textContent = options[2].tr;
+  document.getElementById("leftEn").textContent = options[0].en;
+  document.getElementById("centerEn").textContent = options[1].en;
+  document.getElementById("rightEn").textContent = options[2].en;
+  document.getElementById("dragTr").textContent = currentItem.tr;
+  document.getElementById("dragEn").textContent = currentItem.en;
+  document.getElementById("line3").textContent = `- ${currentItem.tr.toUpperCase()}YI EŞLE`;
+
+  // Görseller
+  document.getElementById("leftImg").src = `./assets/${options[0].tr.toLowerCase()}.png`;
+  document.getElementById("centerImg").src = `./assets/${options[1].tr.toLowerCase()}.png`;
+  document.getElementById("rightImg").src = `./assets/${options[2].tr.toLowerCase()}.png`;
+  document.getElementById("dragImg").src = `./assets/${currentItem.tr.toLowerCase()}.png`;
+}
+newRound();
+
+// --- Sürükle bırak sistemi ---
+const dragCard = document.getElementById("dragCard");
+let offsetX, offsetY, isDragging = false;
+
+function startDrag(e){
+  isDragging = true;
+  const rect = dragCard.getBoundingClientRect();
+  offsetX = (e.touches?e.touches[0].clientX:e.clientX) - rect.left;
+  offsetY = (e.touches?e.touches[0].clientY:e.clientY) - rect.top;
+  dragCard.style.transition = "none";
+}
+function onDrag(e){
+  if(!isDragging) return;
+  const x = (e.touches?e.touches[0].clientX:e.clientX) - offsetX;
+  const y = (e.touches?e.touches[0].clientY:e.clientY) - offsetY;
+  dragCard.style.left = x + "px";
+  dragCard.style.top = y + "px";
+}
+function endDrag(e){
+  isDragging = false;
+  dragCard.style.transition = "all .3s ease";
+  const dropX = (e.changedTouches?e.changedTouches[0].clientX:e.clientX);
+  const dropY = (e.changedTouches?e.changedTouches[0].clientY:e.clientY);
+  const cards = ["optionLeft","optionCenter","optionRight"].map(id=>document.getElementById(id));
+  let matched = false;
+  cards.forEach(c=>{
+    const r=c.getBoundingClientRect();
+    if(dropX>r.left&&dropX<r.right&&dropY>r.top&&dropY<r.bottom){
+      if(c.querySelector(".card-tr").textContent===currentItem.tr){
+        matched=true;
+      }
+    }
+  });
+  if(matched){ correctMatch(); } else { wrongMatch(); }
+  resetDragPosition();
+}
+
+function resetDragPosition(){
+  dragCard.style.left="50%";
+  dragCard.style.top="";
+  dragCard.style.bottom="7%";
+  dragCard.style.transform="translateX(-50%)";
+}
+
+dragCard.addEventListener("mousedown",startDrag);
+dragCard.addEventListener("touchstart",startDrag);
+window.addEventListener("mousemove",onDrag);
+window.addEventListener("touchmove",onDrag);
+window.addEventListener("mouseup",endDrag);
+window.addEventListener("touchend",endDrag);
+
+// --- Doğru/yanlış eşleşmeler ---
+function correctMatch(){
+  dragCard.classList.add("correct");
+  praiseSounds[Math.floor(Math.random()*praiseSounds.length)].play();
+  score++;
+  updateSymbolBar();
+  animateStar();
+  if(score>=8){ allCollected(); score=0; resetSymbols(); }
+  setTimeout(()=>{dragCard.classList.remove("correct"); newRound();},1000);
+}
+function wrongMatch(){
+  dragCard.classList.add("wrong");
+  wrongSound.play();
+  setTimeout(()=>dragCard.classList.remove("wrong"),500);
+}
+
+// --- Sembol bar & tahta ---
+function updateSymbolBar(){
+  const slot=document.getElementById("b"+score);
+  if(slot){slot.classList.add("empty");}
+  const boardSlot=document.getElementById("s"+score);
+  if(boardSlot){boardSlot.classList.add("active");}
+}
+function resetSymbols(){
+  for(let i=1;i<=8;i++){
+    document.getElementById("b"+i).classList.remove("empty");
+    document.getElementById("s"+i).classList.remove("active");
+  }
+}
+function animateStar(){
+  const star=document.getElementById("flyStar");
+  star.style.opacity="1";
+  star.style.transform="translate(-50%,-50%) scale(1)";
+  setTimeout(()=>{star.style.opacity="0"; star.style.transform="translate(-50%,-50%) scale(0)";},800);
+}
+
+// --- Tüm semboller toplandığında ---
+function allCollected(){
+  allCollectedSound.play();
+  setTimeout(()=>{
+    let count=1;
+    const interval=setInterval(()=>{
+      const slot=document.getElementById("s"+count);
+      if(slot){slot.textContent=count; setTimeout(()=>slot.textContent="⭐",400);}
+      count++;
+      if(count>8){clearInterval(interval);}
+    },700);
+  },2000);
+}
 </script>
 </body>
 </html>
