@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Pika & Berk – V23.3 (Full • Ses + biber.png)</title>
-
+<title>Pika & Berk – V23.4 (FULL • Ses Toggle + Random)</title>
 <style>
 :root{ --card-w:170px; --card-h:220px; }
 *{ box-sizing:border-box; }
@@ -24,7 +23,7 @@ body{
 #instructionBox .title{font-weight:700; margin-bottom:4px;}
 #instructionBox .line{font-weight:700; font-size:13px; text-transform:uppercase; margin:1px 0;}
 
-/* Üstteki 3 seçenek kart (biraz yukarı ve yakın) */
+/* Üstteki 3 seçenek (yukarı ve yakın) */
 .option-card{
   width:var(--card-w); height:var(--card-h);
   background:#fff; border:3px solid rgba(11,132,165,.4); border-radius:16px;
@@ -79,20 +78,19 @@ body{
 }
 .slot.active{ opacity:1; transform:scale(1.06);}
 
-/* Uçan sembol */
+/* Uçan ⭐ */
 #flyStar{
   position:absolute; width:40px; height:40px; background:gold; border-radius:50%;
   box-shadow:0 0 12px rgba(255,215,0,.9); top:50%; left:50%;
   transform:translate(-50%,-50%) scale(0); opacity:0; pointer-events:none; z-index:999; transition:all .35s ease;
 }
 
-/* Ses kilidi butonu (iOS/Android autoplay için) */
-#unlockAudio{
+/* Ses butonu */
+#toggleAudio{
   position:fixed; inset:auto 20px 20px auto;
   background:#1976d2; color:#fff; border:0; border-radius:24px; padding:10px 14px;
   box-shadow:0 4px 12px rgba(0,0,0,.2); font-weight:700; cursor:pointer; z-index:1500;
 }
-#unlockAudio.hidden{ display:none; }
 </style>
 </head>
 <body>
@@ -146,19 +144,19 @@ body{
 <!-- Uçan ⭐ -->
 <div id="flyStar"></div>
 
-<!-- Ses kilidi butonu -->
-<button id="unlockAudio">🔊 Sesi Aç</button>
+<!-- Ses toggle -->
+<button id="toggleAudio">🔊 Sesi Aç</button>
 
 <script>
 /* =========================
-   V23.3 – FULL MEKANİKLER
-   (Görsel düzen + Ses aktif + biber.png düzeltildi)
+   V23.4 – FULL MEKANİKLER
+   (Ses toggle + random praise; diğerleri aynı)
    ========================= */
 
 /* --- 50 NESNE (id = assets dosya adı) --- */
-/* biber görseli "biber.png" olarak düzeltildi */
+/* biber görseli "biber.png" olarak */
 const ITEMS = [
-  // Meyveler (10)
+  // Meyveler
   {id:"elma",tr:"Elma",en:"Apple"},
   {id:"muz",tr:"Muz",en:"Banana"},
   {id:"armut",tr:"Armut",en:"Pear"},
@@ -169,10 +167,10 @@ const ITEMS = [
   {id:"kavun",tr:"Kavun",en:"Melon"},
   {id:"portakal",tr:"Portakal",en:"Orange"},
   {id:"kivi",tr:"Kivi",en:"Kiwi"},
-  // Sebzeler (10)
+  // Sebzeler
   {id:"domates",tr:"Domates",en:"Tomato"},
   {id:"salatalik",tr:"Salatalık",en:"Cucumber"},
-  {id:"biber",tr:"Biber",en:"Pepper"},         // <— burada biber.png
+  {id:"biber",tr:"Biber",en:"Pepper"},
   {id:"sarimsak",tr:"Sarımsak",en:"Garlic"},
   {id:"sogan",tr:"Soğan",en:"Onion"},
   {id:"brokoli",tr:"Brokoli",en:"Broccoli"},
@@ -180,7 +178,7 @@ const ITEMS = [
   {id:"lahana",tr:"Lahana",en:"Cabbage"},
   {id:"misir",tr:"Mısır",en:"Corn"},
   {id:"patlican",tr:"Patlıcan",en:"Eggplant"},
-  // Taşıtlar (10)
+  // Taşıtlar
   {id:"kamyon",tr:"Kamyon",en:"Truck"},
   {id:"araba",tr:"Araba",en:"Car"},
   {id:"motosiklet",tr:"Motosiklet",en:"Motorcycle"},
@@ -191,7 +189,7 @@ const ITEMS = [
   {id:"tren",tr:"Tren",en:"Train"},
   {id:"otobus",tr:"Otobüs",en:"Bus"},
   {id:"itfaiye_arabasi",tr:"İtfaiye Arabası",en:"Fire Truck"},
-  // Hayvanlar (20)
+  // Hayvanlar
   {id:"aslan",tr:"Aslan",en:"Lion"},
   {id:"kaplan",tr:"Kaplan",en:"Tiger"},
   {id:"kedi",tr:"Kedi",en:"Cat"},
@@ -235,9 +233,15 @@ const dragEn   = document.getElementById("dragEn");
 const barSlots   = [...document.querySelectorAll('#symbolBar .bar-slot')];
 const boardSlots = [...document.querySelectorAll('#symbolBoard .slot')];
 const flyStar    = document.getElementById("flyStar");
-const unlockBtn  = document.getElementById("unlockAudio");
+const toggleBtn  = document.getElementById("toggleAudio");
 
-/* Sesler (preload + unlock) */
+/* Sesler (preload) ve toggle */
+let audioEnabled=false;
+toggleBtn.onclick=()=>{
+  audioEnabled=!audioEnabled;
+  toggleBtn.textContent=audioEnabled?"🔇 Sesi Kapat":"🔊 Sesi Aç";
+};
+
 const praiseSounds = [
   new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_bf4d03054b.mp3"), // aferin
   new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_2f19d9df1b.mp3"), // bravo
@@ -246,19 +250,7 @@ const praiseSounds = [
 ];
 const wrongSound        = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_21cda77a64.mp3");
 const allCollectedSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_8a468eab84.mp3");
-[...praiseSounds, wrongSound, allCollectedSound].forEach(a=>{ try{ a.preload="auto"; a.load(); }catch(e){} });
-
-let audioUnlocked = false;
-unlockBtn.addEventListener("click",()=>{
-  // kullanıcı etkileşimi ile ses izni
-  try{
-    praiseSounds[0].muted = true; praiseSounds[0].play().then(()=>{praiseSounds[0].pause(); praiseSounds[0].muted=false;});
-    wrongSound.muted = true; wrongSound.play().then(()=>{wrongSound.pause(); wrongSound.muted=false;});
-    allCollectedSound.muted = true; allCollectedSound.play().then(()=>{allCollectedSound.pause(); allCollectedSound.muted=false;});
-  }catch(e){}
-  audioUnlocked = true;
-  unlockBtn.classList.add("hidden");
-});
+[...praiseSounds,wrongSound,allCollectedSound].forEach(a=>{try{a.preload="auto";a.load();}catch{}});
 
 /* Durumlar */
 let current=null, wrongA=null, wrongB=null, attempt=1;
@@ -379,13 +371,13 @@ function dragEnd(){
 /* Doğru / Yanlış */
 function handleCorrect(){
   dragCard.classList.add("correct");
-  if(audioUnlocked){
+  if(audioEnabled){
     const snd=praiseSounds[Math.floor(Math.random()*praiseSounds.length)];
     try{ snd.currentTime=0; snd.play(); }catch(e){}
   }
   gainSymbol();
 
-  // 2 denemeli akış: ilk doğruysa üstteki seçenekleri karıştırıp aynı nesneyi tekrar sor
+  // 2 denemeli akış: ilk doğruysa üst seçenekleri karıştır, tekrar sor
   if(attempt===1){
     setTimeout(()=>{
       dragCard.classList.remove("correct");
@@ -402,7 +394,7 @@ function handleCorrect(){
 }
 function handleWrong(){
   dragCard.classList.add("wrong");
-  if(audioUnlocked){ try{ wrongSound.currentTime=0; wrongSound.play(); }catch(e){} }
+  if(audioEnabled){ try{ wrongSound.currentTime=0; wrongSound.play(); }catch(e){} }
   setTimeout(()=>{ dragCard.classList.remove("wrong"); resetDragPosition(); },450);
 }
 
@@ -421,13 +413,13 @@ function shuffleTopOptions(){
   }
 }
 
-/* ====== Sembol Sistemi (bar → tahta, sonra sayma) ====== */
+/* ====== Sembol Sistemi (bar → tahta → sayma) ====== */
 function firstFilledBarIndex(){return barSlots.findIndex(s=>!s.classList.contains("empty"));}
 function firstEmptyBarIndex(){return barSlots.findIndex(s=>s.classList.contains("empty"));}
 
 function gainSymbol(){
   if(countingMode) return;
-  // bar’dan soldaki dolu ilk yıldızı azalt
+  // bar’dan soldaki dolu ilk yıldız eksilsin
   const i=firstFilledBarIndex();
   if(i!==-1) barSlots[i].classList.add("empty");
 
@@ -446,7 +438,7 @@ function gainSymbol(){
       boardSlots[collectedOnBoard].classList.add("active");
       collectedOnBoard++;
       if(collectedOnBoard===8){
-        // sayma modu başlasın
+        // sayma modu
         setTimeout(()=>{ countingMode=true; counted=0; speakTR("Hadi sembolleri sayalım"); },400);
       }
     }
@@ -472,11 +464,11 @@ boardSlots.forEach(slot=>{
 
     if(counted===8){
       setTimeout(()=>{
-        if(audioUnlocked){ try{ allCollectedSound.currentTime=0; allCollectedSound.play(); }catch(e){} }
+        if(audioEnabled){ try{ allCollectedSound.currentTime=0; allCollectedSound.play(); }catch(e){} }
         speakTR("Aferin! Tüm sembolleri topladın");
         // sıfırla
         countingMode=false; counted=0; collectedOnBoard=0;
-        // tahta boşaldı; bar tamamen doldu
+        // tahta boş, bar tam dolu
       },500);
     }
   });
@@ -491,7 +483,7 @@ function speakTR(t){
 
 /* Başlat */
 window.addEventListener("load", ()=>{
-  barSlots.forEach(s=>s.classList.remove("empty")); // bar’ı full dolu başlat
+  barSlots.forEach(s=>s.classList.remove("empty")); // bar full başlasın
   loadNew();
 });
 </script>
